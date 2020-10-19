@@ -1,8 +1,5 @@
-const createError = require('http-errors');
 const express = require('express');
 const http = require("http");
-const url = require("url");
-const WebSocket = require("ws");
 const app = express();
 const webSocketServer = require('websocket').server;
 const server = http.createServer(app);
@@ -12,7 +9,6 @@ const wsServer= new webSocketServer({
 const port = 1340;
 
 console.log(port);
-
 
 // Answer on all http requests
 app.use(function (req, res) {
@@ -33,7 +29,12 @@ const users = {};
 let textBoxContent = null;
 // User activity history.
 let userActivity = [];
+let activeUser;
+let time;
 
+function formatTime () {
+  return new Date().getDate() + "/" + (new Date().getMonth() +1) + " kl " + new Date().getHours() + ':' + ('0' + new Date().getMinutes()).slice(-2);
+}
 
 
 const sendMessage = (json) => {
@@ -61,21 +62,23 @@ wsServer.on('request', function(request) {
       const json = { type: dataFromClient.type };
       if (dataFromClient.type === typesDef.USER_EVENT) {
         users[userID] = dataFromClient;
-        userActivity.push(`${dataFromClient.username} joined to edit the document`);
+        userActivity.push(`${dataFromClient.username} joined the chat`);
         json.data = { users, userActivity };
       } else if (dataFromClient.type === typesDef.CONTENT_CHANGE) {
         textBoxContent = dataFromClient.content;
-        console.log("text" + textBoxContent);
-        json.data = {textBoxContent, userActivity };
+        activeUser = dataFromClient.username;
+        time = formatTime();
+        console.log(time);
+        json.data = {textBoxContent, userActivity, activeUser, time};
       }
       sendMessage(JSON.stringify(json));
     }
   });
   // user disconnected
-  connection.on('close', function(connection) {
+  connection.on('close', function() {
     console.log((new Date()) + " Peer " + userID + " disconnected.");
     const json = { type: typesDef.USER_EVENT };
-    userActivity.push(`${users[userID].username} left the document`);
+    userActivity.push(`${users[userID].username} left the chat`);
     json.data = { users, userActivity };
     delete clients[userID];
     delete users[userID];
