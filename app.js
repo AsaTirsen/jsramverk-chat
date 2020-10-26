@@ -9,7 +9,7 @@ const wsServer = new webSocketServer({
 const port = 1340;
 const mongo = require("mongodb").MongoClient;
 //const dsn = process.env.DBWEBB_DSN || "mongodb://localhost:27017/chat";
-const dsn = process.env.DBWEBB_DSN || "mongodb://my-app.asatirsen.me:27017/chat";
+const dsn = process.env.DBWEBB_DSN || "mongodb://my-app.asatirsen.me/chat";
 
 console.log(port);
 
