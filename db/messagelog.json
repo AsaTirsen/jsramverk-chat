@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "user": "Kalle",
+    "message": "Jag gillar godis",
+    "time": "09:45"
+  },
+  {
+    "id": "2",
+    "user": "Nisse",
+    "message": "Jag gillar bananer",
+    "time": "09:50"
+  }
+]
