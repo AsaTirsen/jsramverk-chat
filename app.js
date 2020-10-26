@@ -6,7 +6,7 @@ const server = http.createServer(app);
 const wsServer = new webSocketServer({
     httpServer: server
 });
-const port = 1340;
+//const port = 1340;
 const mongo = require("mongodb").MongoClient;
 //const dsn = process.env.DBWEBB_DSN || "mongodb://localhost:27017/chat";
 const dsn = process.env.DBWEBB_DSN || "mongodb://chat.asatirsen.me/chat";
