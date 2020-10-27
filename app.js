@@ -10,7 +10,6 @@ const port = 1340;
 const mongo = require("mongodb").MongoClient;
 const dsn = "mongodb://localhost:27017/chat";
 console.log(dsn);
-
 console.log(port);
 
 // Answer on all http requests
@@ -88,6 +87,7 @@ wsServer.on('request', function (request) {
         if (message.type === 'utf8') {
             const dataFromClient = JSON.parse(message.utf8Data);
             const json = {type: dataFromClient.type};
+            const dbInsert = {type: dataFromClient.type};
             if (dataFromClient.type === typesDef.USER_EVENT) {
                 // json.data = {users, userActivity};
                 // sendMessage(JSON.stringify(json))
@@ -106,12 +106,12 @@ wsServer.on('request', function (request) {
                 textBoxContent = dataFromClient.content;
                 activeUser = dataFromClient.username;
                 time = formatTime();
-                let dbInsert = {textBoxContent, activeUser, time}
-                insertIntoMessages("messages", dbInsert)
+                dbInsert.data = {textBoxContent, activeUser, time}
+                insertIntoMessages("messages", dbInsert.data)
                     .catch(err => console.log(err));
                 json.data = {userActivity};
             }
-            sendMessage(JSON.stringify(json));
+            sendMessage(JSON.stringify(dbInsert));
         }
     });
     // user disconnected
